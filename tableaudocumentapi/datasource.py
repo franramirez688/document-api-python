@@ -10,7 +10,7 @@ import xml.etree.ElementTree as ET
 import xml.sax.saxutils as sax
 from uuid import uuid4
 
-from tableaudocumentapi import Connection, xfile
+from tableaudocumentapi import Connection, xfile, Filter
 from tableaudocumentapi import Field
 from tableaudocumentapi.multilookup_dict import MultiLookupDict
 from tableaudocumentapi.xfile import xml_open
@@ -31,7 +31,7 @@ _ColumnObjectReturnTuple = collections.namedtuple('_ColumnObjectReturnTupleType'
 def _get_metadata_xml_for_field(root_xml, field_name):
     if "'" in field_name:
         field_name = sax.escape(field_name, {"'": "&apos;"})
-    xpath = ".//metadata-record[@class='column'][local-name='{}']".format(field_name)
+    xpath = u".//metadata-record[@class='column'][local-name='{}']".format(field_name)
     return root_xml.find(xpath)
 
 
@@ -114,6 +114,26 @@ class ConnectionParser(object):
         return connections
 
 
+class FilterParser(object):
+
+    def __init__(self, datasource_xml, version):
+        self._dsxml = datasource_xml
+        self._dsversion = version
+
+    def _extract_federated_filter(self):
+        raise NotImplementedError()
+
+    def _extract_legacy_filter(self):
+        return list(map(Filter, self._dsxml.findall('filter')))
+
+    def get_filters(self):
+        if float(self._dsversion) < 10:
+            filters = self._extract_legacy_filter()
+        else:
+            filters = self._extract_federated_filter()
+        return filters
+
+
 class Datasource(object):
     """
     A class for writing datasources to Tableau files.
@@ -139,7 +159,16 @@ class Datasource(object):
         self._connection_parser = ConnectionParser(
             self._datasourceXML, version=self._version)
         self._connections = self._connection_parser.get_connections()
+
+        self._filter_parser = FilterParser(
+            self._datasourceXML, version=self._version
+        )
+        self._filters = self._filter_parser.get_filters()
+
         self._fields = None
+
+    def rawXML(self):
+        return self._datasourceXML
 
     @classmethod
     def from_file(cls, filename):
@@ -212,6 +241,13 @@ class Datasource(object):
     @property
     def connections(self):
         return self._connections
+
+    ###########
+    # filters
+    ###########
+    @property
+    def filters(self):
+        return self._filters
 
     ###########
     # fields

@@ -199,4 +199,4 @@ class Field(object):
         if description is None:
             return None
 
-        return u'{}'.format(ET.tostring(description, encoding='utf-8'))  # This is necessary for py3 support
+        return u'{}'.format(unicode(ET.tostring(description)))  # This is necessary for py3 support
