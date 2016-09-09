@@ -45,6 +45,7 @@ class Field(object):
 
         if column_xml is not None:
             self._initialize_from_column_xml(column_xml)
+            self._column_xml = column_xml
             # This isn't currently never called because of the way we get the data from the xml,
             # but during the refactor, we might need it.  This is commented out as a reminder
             # if metadata_xml is not None:
@@ -161,6 +162,17 @@ class Field(object):
     def calculation(self):
         """ If this field is a calculated field, this will be the formula """
         return self._calculation
+
+    @calculation.setter
+    def calculation(self, value):
+        try:
+            self._calculation = value
+            calc = self._column_xml.find('.//calculation')
+            calc.attrib['formula'] = value
+        except AttributeError:
+            return
+        return value
+
 
     @property
     def default_aggregation(self):
