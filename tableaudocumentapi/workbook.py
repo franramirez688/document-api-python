@@ -45,6 +45,15 @@ class Workbook(object):
             self._workbookRoot, self._datasource_index
         )
 
+
+    ###########
+    # Gets the raw xml tree
+    ###########
+    def raw_xml(self, encoding='utf-8'):
+        xml = ET.tostring(self._workbookRoot, encoding=encoding)
+        return xml if not isinstance(xml, bytes) else xml.decode('utf-8')
+
+
     ###########
     # datasources
     ###########
