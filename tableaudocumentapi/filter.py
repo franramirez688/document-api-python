@@ -27,7 +27,10 @@ class Filter(object):
         self._column = filterxml.get('column')
         self._filtergroup = filterxml.get('filter-group')
 
-        self._member = self._find_group_filter().get('member')
+        if self._type == 'categorical':
+            self._member = self._find_group_filter().get('member')
+        else:
+            self._member = None
 
     def __repr__(self):
         return "<Filter type='{}' column='{}' member='{}'>".format(
