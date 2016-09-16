@@ -167,8 +167,10 @@ class Field(object):
     def calculation(self, value):
         try:
             self._calculation = value
+            self._column_xml.set('value', value)
+            self._column_xml.set('alias', value)
             calc = self._column_xml.find('.//calculation')
-            calc.attrib['formula'] = value
+            calc.set('formula', value)
         except AttributeError:
             return
         return value
