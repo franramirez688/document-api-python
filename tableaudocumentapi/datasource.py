@@ -121,7 +121,7 @@ class FilterParser(object):
         self._dsversion = version
 
     def _extract_federated_filter(self):
-        raise NotImplementedError()
+        return list(map(Filter, self._dsxml.findall('filter')))
 
     def _extract_legacy_filter(self):
         return list(map(Filter, self._dsxml.findall('filter')))
