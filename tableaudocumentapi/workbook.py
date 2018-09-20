@@ -1,12 +1,4 @@
-###############################################################################
-#
-# Workbook - A class for writing Tableau workbook files
-#
-###############################################################################
-import os
-import zipfile
 import weakref
-
 import xml.etree.ElementTree as ET
 
 from tableaudocumentapi import Datasource, xfile
@@ -14,25 +6,18 @@ from tableaudocumentapi.xfile import xml_open
 
 
 class Workbook(object):
-    """
-    A class for writing Tableau workbook files.
+    """A class for writing Tableau workbook files."""
 
-    """
-
-    ###########################################################################
-    #
-    # Public API.
-    #
-    ###########################################################################
     def __init__(self, filename):
-        """
-        Constructor.
+        """Open the workbook at `filename`. This will handle packaged and unpacked
+        workbook files automatically. This will also parse Data Sources and Worksheets
+        for access.
 
         """
 
         self._filename = filename
 
-        self._workbookTree = xml_open(self._filename, self.__class__.__name__.lower())
+        self._workbookTree = xml_open(self._filename, 'workbook')
 
         self._workbookRoot = self._workbookTree.getroot()
         # prepare our datasource objects
@@ -45,14 +30,12 @@ class Workbook(object):
             self._workbookRoot, self._datasource_index
         )
 
-
     ###########
     # Gets the raw xml tree
     ###########
     def raw_xml(self, encoding='utf-8'):
         xml = ET.tostring(self._workbookRoot, encoding=encoding)
         return xml if not isinstance(xml, bytes) else xml.decode('utf-8')
-
 
     ###########
     # datasources
@@ -61,16 +44,10 @@ class Workbook(object):
     def datasources(self):
         return self._datasources
 
-    ###########
-    # worksheets
-    ###########
     @property
     def worksheets(self):
         return self._worksheets
 
-    ###########
-    # filename
-    ###########
     @property
     def filename(self):
         return self._filename
@@ -104,11 +81,6 @@ class Workbook(object):
         xfile._save_file(
             self._filename, self._workbookTree, new_filename)
 
-    ###########################################################################
-    #
-    # Private API.
-    #
-    ###########################################################################
     @staticmethod
     def _prepare_datasource_index(datasources):
         retval = weakref.WeakValueDictionary()

@@ -5,8 +5,8 @@ except ImportError:
 
 setup(
     name='tableaudocumentapi',
-    version='0.3',
-    author='Tableau Software',
+    version='0.6',
+    author='Tableau',
     author_email='github@tableau.com',
     url='https://github.com/tableau/document-api-python',
     packages=['tableaudocumentapi'],

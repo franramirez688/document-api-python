@@ -1,7 +1,5 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<datasource caption='foo' formatted-name='postgres.1of3kl00aoax5d1a1ejma1397430' inline='true' source-platform='mac'
-            version='9.3' xmlns:user='http://www.tableausoftware.com/xml/user'>
-  <repository-location />
+<datasource formatted-name='postgres.1of3kl00aoax5d1a1ejma1397430' inline='true' source-platform='mac' version='9.3' xmlns:user='http://www.tableausoftware.com/xml/user'>
   <connection authentication='username-password' class='postgres' dbname='TestV1' odbc-native-protocol='yes' port='5432' server='postgres91.test.tsi.lan' username='test'>
     <relation name='xy' table='[public].[xy]' type='table' />
     <metadata-records>
@@ -80,7 +78,7 @@
   <column caption='A' datatype='string' name='[a]' role='dimension' type='nominal'>
     <desc>
       <formatted-text>
-        <run bold='true' fontsize='96'>A thing</run>
+        <run bold='true' fontsize='96'>año</run>
         <run fontcolor='#686868'>&#10;Something will go here too, in a muted gray</run>
       </formatted-text>
     </desc>
